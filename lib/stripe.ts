@@ -1,0 +1,113 @@
+import Stripe from "stripe";
+
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2024-06-20",
+  typescript: true,
+});
+
+export const SERVICES = [
+  {
+    id: "consultation",
+    name: "Discovery Call",
+    description: "A no-jargon 45-minute call to understand your business, what you need, and how we can help. No commitment required.",
+    price: 49,
+    duration: "45 min",
+    category: "consulting",
+    popular: false,
+    features: [
+      "Understand your goals",
+      "Plain-English advice",
+      "Project cost estimate",
+      "No obligation to proceed",
+    ],
+  },
+  {
+    id: "web-starter",
+    name: "Essential Website",
+    description: "A clean, professional 5-page website that gets your business found online. Perfect for tradespeople and local businesses.",
+    price: 399,
+    duration: "2–3 weeks",
+    category: "web",
+    popular: false,
+    features: [
+      "Up to 5 pages",
+      "Mobile friendly",
+      "Contact & enquiry form",
+      "Google Maps integration",
+      "Basic SEO setup",
+      "1 month free support",
+    ],
+  },
+  {
+    id: "tradesperson-pro",
+    name: "Tradesperson Pro",
+    description: "Built specifically for plumbers, electricians, builders and other tradespeople who want to win more local jobs online.",
+    price: 749,
+    duration: "3–4 weeks",
+    category: "web",
+    popular: false,
+    features: [
+      "Everything in Essential",
+      "Online quote request form",
+      "Before & after photo gallery",
+      "Google Reviews display",
+      "Click-to-call button",
+      "Trade accreditation badges",
+      "2 months free support",
+    ],
+  },
+  {
+    id: "restaurant-package",
+    name: "Restaurant Package",
+    description: "Everything a restaurant, café or takeaway needs: digital menu, table booking, opening hours, and more.",
+    price: 999,
+    duration: "4–5 weeks",
+    category: "web",
+    popular: true,
+    features: [
+      "Everything in Essential",
+      "Digital menu (easy to update)",
+      "Table booking system",
+      "Opening hours & specials",
+      "WhatsApp order button",
+      "Google Maps & reviews",
+      "3 months free support",
+    ],
+  },
+  {
+    id: "web-business",
+    name: "Business Website",
+    description: "A fully custom website with online booking, payments, and an admin panel to manage everything yourself.",
+    price: 1299,
+    duration: "5–7 weeks",
+    category: "web",
+    popular: false,
+    features: [
+      "Fully custom design",
+      "Booking & payment system",
+      "Admin panel included",
+      "Blog or news section",
+      "Performance optimised",
+      "3 months free support",
+    ],
+  },
+  {
+    id: "mobile-app",
+    name: "Mobile App (iOS & Android)",
+    description: "A custom mobile app for your business that works on both iPhone and Android, built from a single codebase to keep costs down.",
+    price: 3999,
+    duration: "10–14 weeks",
+    category: "mobile",
+    popular: false,
+    features: [
+      "iOS & Android",
+      "User login & accounts",
+      "Push notifications",
+      "Works offline",
+      "App Store submission",
+      "6 months free support",
+    ],
+  },
+] as const;
+
+export type Service = (typeof SERVICES)[number];
