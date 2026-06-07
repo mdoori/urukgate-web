@@ -72,17 +72,6 @@ function CheckoutForm({ booking, clientSecret }: { booking: BookingData; clientS
           <PaymentElement
             options={{
               layout: "tabs",
-              appearance: {
-                theme: "night",
-                variables: {
-                  colorPrimary: "#6366f1",
-                  colorBackground: "#141830",
-                  colorText: "#f1f5f9",
-                  colorDanger: "#ef4444",
-                  fontFamily: "Inter, sans-serif",
-                  borderRadius: "8px",
-                },
-              },
             }}
           />
         </div>
