@@ -8,6 +8,7 @@ import ServiceStep from "@/components/booking/ServiceStep";
 import DateTimeStep from "@/components/booking/DateTimeStep";
 import DetailsStep from "@/components/booking/DetailsStep";
 import PaymentStep from "@/components/booking/PaymentStep";
+import FreeConfirmStep from "@/components/booking/FreeConfirmStep";
 import { SERVICES, type Service } from "@/lib/stripe";
 import { CheckCircle2 } from "lucide-react";
 
@@ -20,8 +21,6 @@ export type BookingData = {
   phone: string;
   message: string;
 };
-
-const STEPS = ["Service", "Date & Time", "Your Details", "Payment"];
 
 function BookingContent() {
   const searchParams = useSearchParams();
@@ -44,18 +43,26 @@ function BookingContent() {
     setBooking((prev) => ({ ...prev, ...updates }));
   };
 
+  const isFree = (booking.service?.price ?? 1) === 0;
+
+  // Free services: 3 steps (no payment). Paid: 4 steps.
+  const STEPS = isFree
+    ? ["Service", "Date & Time", "Your Details", "Confirm"]
+    : ["Service", "Date & Time", "Your Details", "Payment"];
+
   const nextStep = () => setStep((s) => Math.min(s + 1, STEPS.length - 1));
   const prevStep = () => setStep((s) => Math.max(s - 1, 0));
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-28">
-      {/* Page title */}
       <div className="text-center mb-10">
         <h1 className="text-3xl sm:text-4xl font-bold mb-3">
-          Book a <span className="text-gradient">Consultation</span>
+          Book a <span className="text-gradient">
+            {isFree ? "Free Discovery Call" : "Consultation"}
+          </span>
         </h1>
         <p className="text-text-muted">
-          Fill in the steps below and we&apos;ll get in touch to confirm your booking.
+          Fill in the steps below and we&apos;ll confirm your booking by email.
         </p>
       </div>
 
@@ -82,11 +89,7 @@ function BookingContent() {
               {label}
             </span>
             {i < STEPS.length - 1 && (
-              <div
-                className={`flex-1 h-px mx-2 transition-all ${
-                  i < step ? "bg-primary" : "bg-border"
-                }`}
-              />
+              <div className={`flex-1 h-px mx-2 transition-all ${i < step ? "bg-primary" : "bg-border"}`} />
             )}
           </div>
         ))}
@@ -95,33 +98,19 @@ function BookingContent() {
       {/* Step content */}
       <div className="glass rounded-2xl border border-border p-6 sm:p-8">
         {step === 0 && (
-          <ServiceStep
-            booking={booking}
-            updateBooking={updateBooking}
-            onNext={nextStep}
-          />
+          <ServiceStep booking={booking} updateBooking={updateBooking} onNext={nextStep} />
         )}
         {step === 1 && (
-          <DateTimeStep
-            booking={booking}
-            updateBooking={updateBooking}
-            onNext={nextStep}
-            onBack={prevStep}
-          />
+          <DateTimeStep booking={booking} updateBooking={updateBooking} onNext={nextStep} onBack={prevStep} />
         )}
         {step === 2 && (
-          <DetailsStep
-            booking={booking}
-            updateBooking={updateBooking}
-            onNext={nextStep}
-            onBack={prevStep}
-          />
+          <DetailsStep booking={booking} updateBooking={updateBooking} onNext={nextStep} onBack={prevStep} />
         )}
-        {step === 3 && (
-          <PaymentStep
-            booking={booking}
-            onBack={prevStep}
-          />
+        {step === 3 && isFree && (
+          <FreeConfirmStep booking={booking} onBack={prevStep} />
+        )}
+        {step === 3 && !isFree && (
+          <PaymentStep booking={booking} onBack={prevStep} />
         )}
       </div>
     </div>

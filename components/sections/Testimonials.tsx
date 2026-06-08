@@ -1,35 +1,56 @@
 "use client";
 
-import { Star, Quote } from "lucide-react";
+import { ShieldCheck, Clock, MessageCircle, PoundSterling, Wrench, TrendingUp } from "lucide-react";
 import { motion } from "framer-motion";
 
-const testimonials = [
+const reasons = [
   {
-    name: "Dave Thornton",
-    role: "Owner, Thornton Plumbing & Heating · Wolverhampton",
-    quote:
-      "I was getting all my work through word of mouth before. Since URUK Gate built my website I'm getting calls from people who just found me on Google. Best money I've spent on the business.",
-    rating: 5,
-    avatar: "DT",
-    gradient: "from-orange-500 to-amber-500",
+    icon: PoundSterling,
+    title: "Transparent Pricing",
+    description: "No hidden fees, no surprise invoices. You get a fixed price upfront before any work begins. What we quote is what you pay.",
+    color: "text-green-400",
+    bg: "bg-green-400/10",
+    border: "border-green-400/20",
   },
   {
-    name: "Amir Rashid",
-    role: "Manager, The Balti House · Birmingham",
-    quote:
-      "The online booking and digital menu have made a huge difference. Customers love being able to book a table from their phone. No more missed calls during busy service hours.",
-    rating: 5,
-    avatar: "AR",
-    gradient: "from-primary to-violet-500",
+    icon: MessageCircle,
+    title: "Plain English, Always",
+    description: "No jargon, no tech speak. We explain everything in simple terms so you always know exactly what you're getting and why.",
+    color: "text-blue-400",
+    bg: "bg-blue-400/10",
+    border: "border-blue-400/20",
   },
   {
-    name: "Sharon Bates",
-    role: "Director, TrustBuild Renovations · Coventry",
-    quote:
-      "We were sceptical about spending money on a website but it paid for itself within weeks. We're now fully booked and had to turn work away. Moath explained everything clearly, no tech jargon at all.",
-    rating: 5,
-    avatar: "SB",
-    gradient: "from-accent to-cyan-400",
+    icon: Clock,
+    title: "Fast Turnaround",
+    description: "Most websites are delivered in 2–4 weeks. We know your time is money, so we work quickly without cutting corners.",
+    color: "text-primary",
+    bg: "bg-primary/10",
+    border: "border-primary/20",
+  },
+  {
+    icon: Wrench,
+    title: "Built for Local Businesses",
+    description: "We specialise in small and local businesses across the UK. We understand your customers, your market, and what actually works.",
+    color: "text-orange-400",
+    bg: "bg-orange-400/10",
+    border: "border-orange-400/20",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Support After Launch",
+    description: "Every project includes free support after launch. If something breaks or you need a small change, we're here to help.",
+    color: "text-accent",
+    bg: "bg-accent/10",
+    border: "border-accent/20",
+  },
+  {
+    icon: TrendingUp,
+    title: "Built to Get You Results",
+    description: "A website isn't just a brochure — it should win you business. Everything we build is designed to generate enquiries and grow your revenue.",
+    color: "text-violet-400",
+    bg: "bg-violet-400/10",
+    border: "border-violet-400/20",
   },
 ];
 
@@ -42,10 +63,10 @@ export default function Testimonials() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-yellow-400/10 border border-yellow-400/20 text-sm text-yellow-400 font-medium mb-4"
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-sm text-primary-light font-medium mb-4"
           >
-            <Star className="w-3.5 h-3.5 fill-yellow-400" />
-            Client Stories
+            <ShieldCheck className="w-3.5 h-3.5" />
+            Why Choose Us
           </motion.div>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -54,8 +75,8 @@ export default function Testimonials() {
             transition={{ delay: 0.1 }}
             className="text-3xl sm:text-5xl font-bold mb-4"
           >
-            Trusted by{" "}
-            <span className="text-gradient">Local Businesses</span>
+            Software That Works{" "}
+            <span className="text-gradient">For You</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -64,44 +85,26 @@ export default function Testimonials() {
             transition={{ delay: 0.2 }}
             className="text-text-muted text-lg max-w-xl mx-auto"
           >
-            From plumbers in Wolverhampton to restaurants in Birmingham,
-            here&apos;s what our clients say.
+            We&apos;re a small, focused team that cares about getting you real results —
+            not just delivering a website and disappearing.
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {testimonials.map((t, index) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {reasons.map((reason, index) => (
             <motion.div
-              key={t.name}
+              key={reason.title}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.15 }}
-              className="glass rounded-2xl p-6 border border-border card-hover relative"
+              transition={{ delay: index * 0.1 }}
+              className="glass rounded-2xl p-6 border border-border card-hover"
             >
-              <Quote className="w-8 h-8 text-primary/30 mb-4" />
-
-              <p className="text-text-muted text-sm leading-relaxed mb-6 italic">
-                &ldquo;{t.quote}&rdquo;
-              </p>
-
-              <div className="flex gap-1 mb-4">
-                {Array.from({ length: t.rating }).map((_, i) => (
-                  <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                ))}
+              <div className={`w-11 h-11 rounded-xl ${reason.bg} border ${reason.border} flex items-center justify-center mb-4`}>
+                <reason.icon className={`w-5 h-5 ${reason.color}`} />
               </div>
-
-              <div className="flex items-center gap-3">
-                <div
-                  className={`w-10 h-10 rounded-full bg-gradient-to-br ${t.gradient} flex items-center justify-center text-white text-sm font-bold flex-shrink-0`}
-                >
-                  {t.avatar}
-                </div>
-                <div>
-                  <div className="font-semibold text-sm">{t.name}</div>
-                  <div className="text-text-muted text-xs">{t.role}</div>
-                </div>
-              </div>
+              <h3 className="font-bold text-lg mb-2">{reason.title}</h3>
+              <p className="text-text-muted text-sm leading-relaxed">{reason.description}</p>
             </motion.div>
           ))}
         </div>

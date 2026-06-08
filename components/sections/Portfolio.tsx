@@ -1,47 +1,63 @@
 "use client";
 
-import { ExternalLink, Globe, Smartphone, Wrench } from "lucide-react";
+import Link from "next/link";
+import { Globe, Smartphone, Wrench, UtensilsCrossed, ShoppingBag, LayoutDashboard, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
-const projects = [
+const examples = [
   {
-    title: "Midland Heating Solutions",
-    category: "Tradesperson Pro Website",
-    location: "Wolverhampton, West Midlands",
-    description:
-      "A professional website for a local gas engineer and plumber. Includes an online quote request form, Gas Safe badge display, before & after photo gallery, and a click-to-call button.",
-    tech: ["Next.js", "Tailwind CSS", "Supabase"],
     icon: Wrench,
+    title: "Tradespeople & Contractors",
+    description: "Plumbers, electricians, builders, decorators. We build sites that win you local jobs — with quote forms, before/after galleries, and Gas Safe or NICEIC badge display.",
+    tags: ["Quote request form", "Photo gallery", "Click-to-call", "Google Maps"],
     gradient: "from-orange-500/20 to-amber-500/20",
     border: "border-orange-500/20",
     iconColor: "text-orange-400",
-    result: "3x more quote requests in first month",
   },
   {
-    title: "The Balti House",
-    category: "Restaurant Package",
-    location: "Birmingham, West Midlands",
-    description:
-      "Full digital presence for a popular Birmingham restaurant. Features a digital menu, online table booking system, WhatsApp ordering button, and Google Reviews integration.",
-    tech: ["Next.js", "Stripe", "Supabase"],
-    icon: Globe,
-    gradient: "from-red-500/20 to-orange-500/20",
+    icon: UtensilsCrossed,
+    title: "Restaurants & Takeaways",
+    description: "Digital menus, online table bookings, opening hours, and WhatsApp ordering — everything a local restaurant or café needs to grow.",
+    tags: ["Digital menu", "Table booking", "WhatsApp ordering", "Google Reviews"],
+    gradient: "from-red-500/20 to-rose-500/20",
     border: "border-red-500/20",
     iconColor: "text-red-400",
-    result: "60% of bookings now come online",
   },
   {
-    title: "TrustBuild Renovations",
-    category: "Tradesperson Pro Website",
-    location: "Coventry, West Midlands",
-    description:
-      "Website for a home renovation and building company. Project portfolio gallery, online quote calculator, trade accreditation badges, and customer review showcase.",
-    tech: ["React", "Node.js", "PostgreSQL"],
-    icon: Smartphone,
+    icon: ShoppingBag,
+    title: "Retail & Local Shops",
+    description: "From product showcases to full online stores with inventory management and payment processing, all built to your budget.",
+    tags: ["Product catalogue", "Online payments", "Stock management", "Promotions"],
+    gradient: "from-violet-500/20 to-purple-500/20",
+    border: "border-violet-500/20",
+    iconColor: "text-violet-400",
+  },
+  {
+    icon: Globe,
+    title: "Professional Services",
+    description: "Solicitors, accountants, estate agents, consultants. A professional online presence that builds trust and generates enquiries 24/7.",
+    tags: ["Appointment booking", "Case studies", "Team profiles", "Enquiry forms"],
     gradient: "from-blue-500/20 to-cyan-500/20",
     border: "border-blue-500/20",
     iconColor: "text-blue-400",
-    result: "Fully booked 6 weeks in advance",
+  },
+  {
+    icon: Smartphone,
+    title: "Mobile Apps",
+    description: "If your business needs something beyond a website — a customer loyalty app, booking app, or staff management tool — we build it for iOS and Android.",
+    tags: ["iOS & Android", "Push notifications", "User accounts", "Offline support"],
+    gradient: "from-primary/20 to-violet-500/20",
+    border: "border-primary/20",
+    iconColor: "text-primary",
+  },
+  {
+    icon: LayoutDashboard,
+    title: "Business Dashboards",
+    description: "Replace your spreadsheets with a custom dashboard built for how your business actually works — bookings, invoicing, stock, staff rota, and more.",
+    tags: ["Custom reporting", "Booking management", "Invoice generation", "Staff tools"],
+    gradient: "from-green-500/20 to-emerald-500/20",
+    border: "border-green-500/20",
+    iconColor: "text-green-400",
   },
 ];
 
@@ -58,8 +74,8 @@ export default function Portfolio() {
             viewport={{ once: true }}
             className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-sm text-primary-light font-medium mb-4"
           >
-            <ExternalLink className="w-3.5 h-3.5" />
-            Our Work
+            <Globe className="w-3.5 h-3.5" />
+            What We Build
           </motion.div>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -68,8 +84,8 @@ export default function Portfolio() {
             transition={{ delay: 0.1 }}
             className="text-3xl sm:text-5xl font-bold mb-4"
           >
-            Built for{" "}
-            <span className="text-gradient">Midlands Businesses</span>
+            Solutions for Every{" "}
+            <span className="text-gradient">Local Business</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -78,51 +94,42 @@ export default function Portfolio() {
             transition={{ delay: 0.2 }}
             className="text-text-muted text-lg max-w-xl mx-auto"
           >
-            Real projects for local businesses just like yours, delivered on
-            time, on budget, and with results that speak for themselves.
+            Whether you&apos;re a one-person trade or a growing local business, we build
+            software that fits your needs and your budget.
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {projects.map((project, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {examples.map((item, index) => (
             <motion.div
-              key={project.title}
+              key={item.title}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.15 }}
-              className={`glass rounded-2xl p-6 border ${project.border} card-hover relative overflow-hidden`}
+              transition={{ delay: index * 0.1 }}
+              className={`glass rounded-2xl p-6 border ${item.border} card-hover relative overflow-hidden`}
             >
-              <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-30 rounded-2xl`} />
+              <div className={`absolute inset-0 bg-gradient-to-br ${item.gradient} opacity-30 rounded-2xl`} />
 
               <div className="relative z-10">
-                <div className={`w-11 h-11 rounded-xl bg-surface-elevated border border-border flex items-center justify-center mb-4 ${project.iconColor}`}>
-                  <project.icon className="w-5 h-5" />
+                <div className={`w-11 h-11 rounded-xl bg-surface-elevated border border-border flex items-center justify-center mb-4 ${item.iconColor}`}>
+                  <item.icon className="w-5 h-5" />
                 </div>
 
-                <div className="text-xs font-medium text-text-muted mb-1 uppercase tracking-wider">
-                  {project.category}
-                </div>
-                <div className="text-xs text-primary mb-2">{project.location}</div>
-                <h3 className="font-bold text-xl mb-3">{project.title}</h3>
+                <h3 className="font-bold text-lg mb-3">{item.title}</h3>
                 <p className="text-text-muted text-sm leading-relaxed mb-4">
-                  {project.description}
+                  {item.description}
                 </p>
 
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {project.tech.map((t) => (
+                <div className="flex flex-wrap gap-2">
+                  {item.tags.map((tag) => (
                     <span
-                      key={t}
-                      className="px-2 py-1 rounded-md bg-surface-elevated border border-border text-xs text-text-muted font-mono"
+                      key={tag}
+                      className="px-2 py-1 rounded-md bg-surface-elevated border border-border text-xs text-text-muted"
                     >
-                      {t}
+                      {tag}
                     </span>
                   ))}
-                </div>
-
-                <div className="flex items-center gap-2 p-3 rounded-xl bg-surface-elevated border border-border">
-                  <span className="w-2 h-2 rounded-full bg-green-400 flex-shrink-0" />
-                  <span className="text-sm font-semibold text-green-400">{project.result}</span>
                 </div>
               </div>
             </motion.div>
@@ -130,12 +137,13 @@ export default function Portfolio() {
         </div>
 
         <div className="text-center mt-12">
-          <p className="text-text-muted text-sm">
-            Based in the Midlands · Serving local businesses across the UK ·{" "}
-            <a href="/book" className="text-primary hover:text-primary-light transition-colors font-medium">
-              Get a free quote →
-            </a>
+          <p className="text-text-muted text-sm mb-4">
+            Don&apos;t see your business type? We work with all kinds of local businesses.
           </p>
+          <Link href="/book" className="btn-primary inline-flex items-center gap-2">
+            Book a Free Call to Discuss Your Project
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
       </div>
     </section>

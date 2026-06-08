@@ -5,9 +5,9 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { CheckCircle2, Video, Mail, Calendar, ArrowRight, Copy, Check } from "lucide-react";
+import { CheckCircle2, Video, Mail, Calendar, ArrowRight, Copy, Check, Loader2 } from "lucide-react";
 
-type BookingDetails = {
+type BookingResult = {
   booking_ref: string;
   service_name: string;
   booking_date: string;
@@ -21,35 +21,29 @@ function ConfirmedContent() {
   const searchParams = useSearchParams();
   const paymentIntentId = searchParams.get("payment_intent");
 
-  const [booking, setBooking] = useState<BookingDetails | null>(null);
+  const [result, setResult] = useState<BookingResult | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (!paymentIntentId) {
+      setError("No payment reference found.");
       setLoading(false);
       return;
     }
 
-    async function createAndFetchBooking() {
+    async function createBooking() {
       try {
-        // First check if booking already exists (page reload case)
-        const existingRes = await fetch(`/api/bookings/by-payment?id=${paymentIntentId}`);
-        if (existingRes.ok) {
-          const data = await existingRes.json();
-          setBooking(data.booking);
+        // Read booking data saved by PaymentStep before Stripe redirect
+        const raw = localStorage.getItem("pendingBooking");
+        if (!raw) {
+          setError("Booking data not found. Please contact us with your payment reference.");
           setLoading(false);
           return;
         }
 
-        // Create the booking using data saved before payment
-        const pendingData = localStorage.getItem("pendingBooking");
-        if (!pendingData) {
-          setLoading(false);
-          return;
-        }
-
-        const pending = JSON.parse(pendingData);
+        const pending = JSON.parse(raw);
 
         const res = await fetch("/api/bookings", {
           method: "POST",
@@ -60,24 +54,26 @@ function ConfirmedContent() {
           }),
         });
 
-        if (res.ok) {
-          const data = await res.json();
-          setBooking(data.booking);
-          localStorage.removeItem("pendingBooking");
+        if (!res.ok) {
+          throw new Error("Failed to confirm booking");
         }
+
+        const data = await res.json();
+        setResult(data.booking);
+        localStorage.removeItem("pendingBooking");
       } catch (err) {
-        console.error("Failed to create booking:", err);
+        setError("Payment was successful but we couldn't save your booking. Please email us with your payment reference: " + paymentIntentId);
       } finally {
         setLoading(false);
       }
     }
 
-    createAndFetchBooking();
+    createBooking();
   }, [paymentIntentId]);
 
   const copyMeetLink = () => {
-    if (booking?.meet_link) {
-      navigator.clipboard.writeText(booking.meet_link);
+    if (result?.meet_link) {
+      navigator.clipboard.writeText(result.meet_link);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
@@ -102,15 +98,19 @@ function ConfirmedContent() {
       <div className="glass rounded-2xl border border-border p-6 space-y-4 mb-6">
         {loading ? (
           <div className="py-8 text-center text-text-muted">
-            <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-            Setting up your Zoom meeting...
+            <Loader2 className="w-8 h-8 border-primary animate-spin mx-auto mb-3" />
+            <p className="text-sm">Setting up your Zoom meeting...</p>
           </div>
-        ) : booking ? (
+        ) : error ? (
+          <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+            {error}
+          </div>
+        ) : result ? (
           <>
             <div className="flex items-center justify-between pb-4 border-b border-border">
               <div>
                 <div className="text-xs text-text-muted uppercase tracking-wider mb-1">Booking Reference</div>
-                <div className="font-mono font-bold text-primary">{booking.booking_ref}</div>
+                <div className="font-mono font-bold text-primary">{result.booking_ref}</div>
               </div>
               <div className="px-3 py-1.5 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 text-xs font-semibold">
                 Confirmed
@@ -123,7 +123,7 @@ function ConfirmedContent() {
                 <div>
                   <div className="text-xs text-text-muted mb-0.5">Date & Time</div>
                   <div className="text-sm font-medium">
-                    {booking.booking_date} at {booking.booking_time}
+                    {result.booking_date} at {result.booking_time}
                   </div>
                 </div>
               </div>
@@ -131,7 +131,7 @@ function ConfirmedContent() {
                 <Mail className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
                 <div>
                   <div className="text-xs text-text-muted mb-0.5">Service</div>
-                  <div className="text-sm font-medium">{booking.service_name}</div>
+                  <div className="text-sm font-medium">{result.service_name}</div>
                 </div>
               </div>
             </div>
@@ -139,12 +139,12 @@ function ConfirmedContent() {
             {/* Zoom link */}
             <div className="mt-2 p-4 rounded-xl bg-surface-elevated border border-primary/20">
               <div className="flex items-center gap-2 mb-3">
-                <Video className="w-4 h-4 text-[#2D8CFF]" />
+                <Video className="w-4 h-4 text-primary" />
                 <span className="text-sm font-semibold">Your Zoom Meeting Link</span>
               </div>
               <div className="flex items-center gap-2 mb-2">
                 <code className="flex-1 text-xs text-accent bg-background rounded-lg px-3 py-2 truncate font-mono">
-                  {booking.meet_link}
+                  {result.meet_link}
                 </code>
                 <button
                   onClick={copyMeetLink}
@@ -154,44 +154,46 @@ function ConfirmedContent() {
                   {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                 </button>
               </div>
-              {booking.zoom_password && (
+              {result.zoom_password && (
                 <p className="text-text-muted text-xs">
-                  Meeting password: <span className="font-mono text-text-primary">{booking.zoom_password}</span>
+                  Meeting password: <span className="font-mono text-text-primary">{result.zoom_password}</span>
                 </p>
               )}
-              <p className="text-text-muted text-xs mt-1">
-                Click this link at your scheduled time to join the Zoom call.
-              </p>
+              <a
+                href={result.meet_link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 mt-3 btn-primary text-sm px-4 py-2"
+              >
+                <Video className="w-3.5 h-3.5" />
+                Open Zoom Meeting
+              </a>
             </div>
           </>
-        ) : (
-          <div className="text-center py-4">
-            <p className="text-text-muted text-sm">
-              Your payment was received. You&apos;ll get a confirmation email shortly.
-            </p>
-          </div>
-        )}
+        ) : null}
       </div>
 
       {/* Next steps */}
-      <div className="glass rounded-2xl border border-border p-6 mb-8">
-        <h3 className="font-semibold mb-4">What Happens Next</h3>
-        <ol className="space-y-3">
-          {[
-            "Check your email. A detailed confirmation is on its way.",
-            "Save the Zoom link above or find it in your confirmation email",
-            "At the booked time, click the link to join the video call",
-            "We'll map out your project and send you a written proposal within 24 hours",
-          ].map((step, i) => (
-            <li key={i} className="flex items-start gap-3 text-sm text-text-muted">
-              <span className="w-5 h-5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
-                {i + 1}
-              </span>
-              {step}
-            </li>
-          ))}
-        </ol>
-      </div>
+      {result && (
+        <div className="glass rounded-2xl border border-border p-6 mb-8">
+          <h3 className="font-semibold mb-4">What Happens Next</h3>
+          <ol className="space-y-3">
+            {[
+              "Check your email — a confirmation with your Zoom link has been sent",
+              "Save the Zoom link above or add it to your calendar",
+              "At the booked time, click the link to join the video call",
+              "We'll map out your project and send you a written proposal within 24 hours",
+            ].map((step, i) => (
+              <li key={i} className="flex items-start gap-3 text-sm text-text-muted">
+                <span className="w-5 h-5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
+                  {i + 1}
+                </span>
+                {step}
+              </li>
+            ))}
+          </ol>
+        </div>
+      )}
 
       <div className="text-center">
         <Link href="/" className="btn-secondary inline-flex items-center gap-2">
@@ -208,7 +210,12 @@ export default function BookingConfirmedPage() {
     <>
       <Navbar />
       <main className="min-h-screen bg-background">
-        <Suspense fallback={<div className="pt-28 text-center text-text-muted">Loading...</div>}>
+        <Suspense fallback={
+          <div className="pt-28 text-center text-text-muted">
+            <Loader2 className="w-8 h-8 animate-spin mx-auto mb-3 text-primary" />
+            <p>Loading your booking...</p>
+          </div>
+        }>
           <ConfirmedContent />
         </Suspense>
       </main>
