@@ -2,7 +2,6 @@
 
 import { Check, ArrowRight } from "lucide-react";
 import { SERVICES } from "@/lib/stripe";
-import { formatCurrency } from "@/lib/utils";
 import type { BookingData } from "@/app/book/page";
 
 type Props = {
@@ -51,7 +50,6 @@ export default function ServiceStep({ booking, updateBooking, onNext }: Props) {
                 </div>
                 <div className="flex items-center gap-3 flex-shrink-0">
                   <div className="text-right">
-                    <div className="font-bold text-sm">{formatCurrency(service.price)}</div>
                     <div className="text-text-muted text-xs">{service.duration}</div>
                   </div>
                   <div
