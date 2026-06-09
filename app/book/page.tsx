@@ -8,7 +8,6 @@ import ServiceStep from "@/components/booking/ServiceStep";
 import DateTimeStep from "@/components/booking/DateTimeStep";
 import DetailsStep from "@/components/booking/DetailsStep";
 import PaymentStep from "@/components/booking/PaymentStep";
-import FreeConfirmStep from "@/components/booking/FreeConfirmStep";
 import { SERVICES, type Service } from "@/lib/stripe";
 import { CheckCircle2 } from "lucide-react";
 
@@ -43,12 +42,7 @@ function BookingContent() {
     setBooking((prev) => ({ ...prev, ...updates }));
   };
 
-  const isFree = (booking.service?.price ?? 1) === 0;
-
-  // Free services: 3 steps (no payment). Paid: 4 steps.
-  const STEPS = isFree
-    ? ["Service", "Date & Time", "Your Details", "Confirm"]
-    : ["Service", "Date & Time", "Your Details", "Payment"];
+  const STEPS = ["Service", "Date & Time", "Your Details", "Payment"];
 
   const nextStep = () => setStep((s) => Math.min(s + 1, STEPS.length - 1));
   const prevStep = () => setStep((s) => Math.max(s - 1, 0));
@@ -104,10 +98,7 @@ function BookingContent() {
         {step === 2 && (
           <DetailsStep booking={booking} updateBooking={updateBooking} onNext={nextStep} onBack={prevStep} />
         )}
-        {step === 3 && isFree && (
-          <FreeConfirmStep booking={booking} onBack={prevStep} />
-        )}
-        {step === 3 && !isFree && (
+        {step === 3 && (
           <PaymentStep booking={booking} onBack={prevStep} />
         )}
       </div>
