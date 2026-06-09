@@ -8,9 +8,9 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 export const SERVICES = [
   {
     id: "consultation",
-    name: "Free Discovery Call",
-    description: "A no-jargon 30-minute call to understand your business, what you need, and how we can help. Completely free, no commitment.",
-    price: 0,
+    name: "Discovery Call",
+    description: "A no-jargon 30-minute call to understand your business and explore how we can help. A small £10 admin fee is charged to secure your slot.",
+    price: 10,
     duration: "30 min",
     category: "consulting",
     popular: false,

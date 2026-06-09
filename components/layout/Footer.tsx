@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Code2, Mail, Phone, MapPin, Github, Linkedin, Twitter } from "lucide-react";
+import { Code2, Mail, Phone, MapPin, Instagram } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -22,28 +22,24 @@ export default function Footer() {
             </p>
             <div className="flex items-center gap-4 mt-6">
               <a
-                href="https://github.com"
+                href="https://instagram.com/urukgate"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Instagram"
                 className="w-9 h-9 rounded-lg bg-surface-elevated border border-border flex items-center justify-center text-text-muted hover:text-primary hover:border-primary transition-all"
               >
-                <Github className="w-4 h-4" />
+                <Instagram className="w-4 h-4" />
               </a>
               <a
-                href="https://linkedin.com"
+                href="https://x.com/urukgate"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="X (formerly Twitter)"
                 className="w-9 h-9 rounded-lg bg-surface-elevated border border-border flex items-center justify-center text-text-muted hover:text-primary hover:border-primary transition-all"
               >
-                <Linkedin className="w-4 h-4" />
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 rounded-lg bg-surface-elevated border border-border flex items-center justify-center text-text-muted hover:text-primary hover:border-primary transition-all"
-              >
-                <Twitter className="w-4 h-4" />
+                <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor" aria-hidden="true">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
               </a>
             </div>
           </div>
@@ -96,7 +92,7 @@ export default function Footer() {
               href="/book"
               className="inline-block mt-6 btn-primary text-sm"
             >
-              Book a Free Call
+              Book a Discovery Call
             </Link>
           </div>
         </div>

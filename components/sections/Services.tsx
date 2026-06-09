@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Globe, Smartphone, Zap, Palette, Plug, MessageSquare, ArrowRight, Check } from "lucide-react";
 import { motion } from "framer-motion";
 import { SERVICES } from "@/lib/stripe";
-import { formatCurrency } from "@/lib/utils";
 
 const iconMap: Record<string, React.ElementType> = {
   consultation: MessageSquare,
@@ -57,8 +56,8 @@ export default function Services() {
             transition={{ delay: 0.2 }}
             className="text-text-muted text-lg max-w-2xl mx-auto"
           >
-            Transparent pricing with no hidden fees. Every project starts with a free
-            consultation to make sure we build exactly what you need.
+            Affordable, competitive pricing tailored to your budget — no hidden fees, no surprises.
+            Every project starts with a discovery call so we build exactly what you need.
           </motion.p>
         </div>
 
@@ -108,14 +107,11 @@ export default function Services() {
                 </ul>
 
                 <div className="border-t border-border pt-4 mt-auto">
-                  <div className="flex items-end justify-between mb-4">
-                    <div>
-                      <div className="text-xs text-text-muted mb-0.5">Starting from</div>
-                      <div className="text-2xl font-bold text-text-primary">
-                        {formatCurrency(service.price)}
-                      </div>
-                    </div>
-                    <div className="text-xs text-text-muted text-right">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-400/10 border border-green-400/20 text-green-400 text-xs font-semibold">
+                      Competitive Pricing
+                    </span>
+                    <div className="text-xs text-text-muted">
                       {service.duration}
                     </div>
                   </div>
@@ -127,7 +123,7 @@ export default function Services() {
                         : "btn-secondary"
                     }`}
                   >
-                    Get Started
+                    Get a Quote
                     <ArrowRight className="w-4 h-4" />
                   </Link>
                 </div>
