@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X, Code2 } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import UrukLogoIcon from "@/components/ui/UrukLogoIcon";
 
 const navLinks = [
   { label: "Services", href: "/#services" },
@@ -31,8 +32,8 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-glow-primary group-hover:scale-110 transition-transform">
-              <Code2 className="w-4 h-4 text-white" />
+            <div className="group-hover:scale-110 transition-transform">
+              <UrukLogoIcon size={36} />
             </div>
             <span className="font-bold text-lg text-text-primary">
               URUK<span className="text-gradient"> Gate</span>
